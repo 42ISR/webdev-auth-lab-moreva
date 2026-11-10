@@ -4,6 +4,13 @@ import Input from "../components/Input"
 
 const Login = () => {
 
+    const navigate = useNavigate()
+    const {setUser} = useUserStore()
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        setError("")
+    }
     return (
         <div className="container">
             <div class="auth-container">
