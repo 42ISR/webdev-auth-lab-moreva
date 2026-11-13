@@ -13,12 +13,22 @@ const apiInstance = axios.create({
 apiInstance.interceptors.request.use(config => {
     const {session} = useUserStore.getState()
 
-    if (user?.token) {
+    if (session?.token) {
         config.headers.Authorization = `Bearer ${session.token}`
     }
 
     return config
 })
+
+const registerUser = async (user) => {
+    const res = apiInstance.post("/auth/register", user)
+    return res
+}
+
+const loginUser = async (user) => {
+    const res = apiInstance.post("/auth/login", user)
+    return res
+}
 
 const getItems = async () => {
     const res = await apiInstance.get("/items")
@@ -60,9 +70,10 @@ export const api = {
     loginUser,
     registerUser,
     getItems,
-    setStats, 
+    getStats, 
     sendItems, 
     deleteItems, 
     getItemBids,
-    getMyBids
+    getMyBids, 
+    createBid
 }
