@@ -1,4 +1,4 @@
-import axios from "axios"; 
+import axios from "axios";
 import { useUserStore } from "../store/useUserStore";
 
 const apiInstance = axios.create({
@@ -6,12 +6,11 @@ const apiInstance = axios.create({
     headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-
     },
 })
 
-apiInstance.interceptors.request.use(config => {
-    const {session} = useUserStore.getState()
+apiInstance.interceptors.request.use((config) => {
+    const { session } = useUserStore.getState()
 
     if (session?.token) {
         config.headers.Authorization = `Bearer ${session.token}`
@@ -20,14 +19,15 @@ apiInstance.interceptors.request.use(config => {
     return config
 })
 
+
 const registerUser = async (user) => {
-    const res = apiInstance.post("/auth/register", user)
-    return res
+    const res = await apiInstance.post("/auth/register", user)
+    return res.data
 }
 
 const loginUser = async (user) => {
-    const res = apiInstance.post("/auth/login", user)
-    return res
+    const res = await apiInstance.post("/auth/login", user)
+    return res.data
 }
 
 const getItems = async () => {
@@ -41,7 +41,7 @@ const getStats = async () => {
 }
 
 const getItemBids = async (id) => {
-    const res = await apiInstance.get("/items/${id}/bids", id)
+    const res = await apiInstance.get(`/items/${id}/bids`) 
     return res.data
 }
 
@@ -56,15 +56,14 @@ const sendItems = async (item) => {
 }
 
 const deleteItems = async (id) => {
-    const res = await apiInstance.delete("/items/${id}")
+    const res = await apiInstance.delete(`/items/${id}`)
     return res.data
 }
 
 const createBid = async ({ id, amount }) => {
-    const res = await apiInstance.post("/items/${id}/bids", { amount })
+    const res = await apiInstance.post(`/items/${id}/bids`, { amount })
     return res.data
 }
-
 
 export const api = {
     loginUser,

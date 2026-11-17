@@ -23,7 +23,9 @@ const CreateItem = () => {
             price: Number(e.target.price.value),
         }
 
-        if (e.target.imageUrl.value) {item.imageUrl = e.target.imageUrl.value}
+        if (e.target.imageUrl.value) {
+            item.imageUrl = e.target.imageUrl.value
+        }
 
         try {
             await api.sendItems(item)
@@ -31,9 +33,9 @@ const CreateItem = () => {
             navigate('/')
         } catch (err) {
             console.error(err)
-       
+            setError(getErrorMessage(err)) 
         }
-    
+    } 
 
     return (
         <div className="container">
@@ -42,8 +44,8 @@ const CreateItem = () => {
             </div>
 
             <div className="form-container">
-
-             {error && <div className="alert alert-error active">{error}</div>}
+                {error && <div className="alert alert-error active">{error}</div>}
+                
                 <form id="create-item-form" onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label className="form-label">
@@ -76,8 +78,7 @@ const CreateItem = () => {
                             <span className="current">0</span> / 1000
                         </div>
                         <div className="form-hint">
-                            Чем подробнее описание, тем больше шансов продать
-                            товар
+                            Чем подробнее описание, тем больше шансов продать товар
                         </div>
                     </div>
 
@@ -131,5 +132,5 @@ const CreateItem = () => {
         </div>
     )
 }
-}
+
 export default CreateItem
