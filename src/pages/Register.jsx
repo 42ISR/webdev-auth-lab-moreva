@@ -1,9 +1,39 @@
 import { useState } from 'react'
 import Button from '../components/Button'
 import Input from '../components/Input'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useUserStore } from '../store/useUserStore'
+import { api } from '../api/api'
 
 const Register = () => {
+    const [error, setError] = useState("")
+    const navigate = useNavigate()
+    const {setSession} = useUserStore()
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        setError("")
+
+        if (e.target.password.value !== e.target.password2.value)
+            return setError("Пароли не совпадают")
+
+        const user = {
+            username: e.target.username.value,
+            password: e.target.password.value,
+        }
+        if (e.target.email.value) user.email = e.target.email.value
+
+        try {
+            const session = await api.registerUser(user)
+            setSession(session)
+            navigate("/")
+        } catch (error) {
+            console.error(error)
+            setError(error.response.data.error)
+        }
+        
+    }
+
     return (
         <div className="container">
             <div class="auth-container">
@@ -13,11 +43,9 @@ const Register = () => {
                     <p class="auth-subtitle">Создайте новый аккаунт</p>
                 </div>
 
-                <div class="alert alert-error" id="error-alert">
-                    Такое имя пользователя уже занято
-                </div>
-                <div className="auth-error">Ошибка</div>
-                <form id="register-form">
+                {error && <div className="alert alert-error active">{error}</div>}
+    
+                <form id="register-form" onSubmit={handleSubmit}>
                     <div class="form-group">
                         <label class="form-label">Имя пользователя</label>
                         <Input
